@@ -2,6 +2,7 @@ package com.cpcjrcoding.chirp.api.controller
 
 import com.cpcjrcoding.chirp.api.dto.AuthenticatedUserDto
 import com.cpcjrcoding.chirp.api.dto.LoginRequest
+import com.cpcjrcoding.chirp.api.dto.RefreshRequest
 import com.cpcjrcoding.chirp.api.dto.RegisterRequest
 import com.cpcjrcoding.chirp.api.dto.UserDto
 import com.cpcjrcoding.chirp.api.mappers.toAuthenticatedUserDto
@@ -38,4 +39,19 @@ class AuthController(
                 email = body.email,
                 password = body.password,
             ).toAuthenticatedUserDto()
+
+    @PostMapping("/refresh")
+    fun refresh(
+        @RequestBody body: RefreshRequest,
+    ): AuthenticatedUserDto =
+        authService
+            .refresh(body.refreshToken)
+            .toAuthenticatedUserDto()
+
+    @PostMapping("/logout")
+    fun logout(
+        @RequestBody body: RefreshRequest,
+    ) {
+        authService.logout(body.refreshToken)
+    }
 }
