@@ -1,4 +1,4 @@
-package com.cpcjrcoding.chirp.service.auth
+package com.cpcjrcoding.chirp.service
 
 import com.cpcjrcoding.chirp.domain.exception.InvalidTokenException
 import com.cpcjrcoding.chirp.domain.model.UserId
