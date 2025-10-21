@@ -3,6 +3,7 @@ package com.cpcjrcoding.chirp.api.exception_handling
 import com.cpcjrcoding.chirp.domain.exception.EmailNotVerifiedException
 import com.cpcjrcoding.chirp.domain.exception.InvalidCredentialsException
 import com.cpcjrcoding.chirp.domain.exception.InvalidTokenException
+import com.cpcjrcoding.chirp.domain.exception.SamePasswordException
 import com.cpcjrcoding.chirp.domain.exception.UserAlreadyExistsException
 import com.cpcjrcoding.chirp.domain.exception.UserNotFoundException
 import org.springframework.http.HttpStatus
@@ -51,6 +52,14 @@ class AuthExceptionHandler {
     fun onEmailNotVerified(e: EmailNotVerifiedException) =
         mapOf(
             "code" to "EMAIL_NOT_VERIFIED",
+            "message" to e.message,
+        )
+
+    @ExceptionHandler(SamePasswordException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun onSamePassWord(e: SamePasswordException) =
+        mapOf(
+            "code" to "SAME_PASSWORD",
             "message" to e.message,
         )
 

@@ -1,14 +1,18 @@
 package com.cpcjrcoding.chirp.api.controller
 
 import com.cpcjrcoding.chirp.api.dto.AuthenticatedUserDto
+import com.cpcjrcoding.chirp.api.dto.ChangePasswordRequest
+import com.cpcjrcoding.chirp.api.dto.EmailRequest
 import com.cpcjrcoding.chirp.api.dto.LoginRequest
 import com.cpcjrcoding.chirp.api.dto.RefreshRequest
 import com.cpcjrcoding.chirp.api.dto.RegisterRequest
+import com.cpcjrcoding.chirp.api.dto.ResetPasswordRequest
 import com.cpcjrcoding.chirp.api.dto.UserDto
 import com.cpcjrcoding.chirp.api.mappers.toAuthenticatedUserDto
 import com.cpcjrcoding.chirp.api.mappers.toUserDto
-import com.cpcjrcoding.chirp.service.auth.AuthService
-import com.cpcjrcoding.chirp.service.auth.EmailVerificationService
+import com.cpcjrcoding.chirp.service.AuthService
+import com.cpcjrcoding.chirp.service.EmailVerificationService
+import com.cpcjrcoding.chirp.service.PasswordResetService
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     private val authService: AuthService,
     private val emailVerificationService: EmailVerificationService,
+    private val passwordResetService: PasswordResetService,
 ) {
     @PostMapping("/register")
     fun register(
@@ -64,5 +69,29 @@ class AuthController(
         @RequestParam token: String,
     ) {
         emailVerificationService.verifyEmail(token)
+    }
+
+    @PostMapping("/forgot-password")
+    fun forgotPassword(
+        @Valid @RequestBody body: EmailRequest,
+    ) {
+        passwordResetService.requestPasswordReset(body.email)
+    }
+
+    @PostMapping("/reset-password")
+    fun resetPassword(
+        @Valid @RequestBody body: ResetPasswordRequest,
+    ) {
+        passwordResetService.resetPassword(
+            token = body.token,
+            newPassword = body.newPassword,
+        )
+    }
+
+    @PostMapping("/change-password")
+    fun changePassword(
+        @Valid @RequestBody body: ChangePasswordRequest,
+    ) {
+        // TODO: Extract request user ID and call service
     }
 }
