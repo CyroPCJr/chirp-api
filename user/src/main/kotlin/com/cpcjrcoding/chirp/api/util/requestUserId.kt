@@ -1,0 +1,10 @@
+package com.cpcjrcoding.chirp.api.util
+
+import com.cpcjrcoding.chirp.domain.exception.UnauthorizedException
+import com.cpcjrcoding.chirp.domain.model.UserId
+import org.springframework.security.core.context.SecurityContextHolder
+
+val requestUserId: UserId
+    get() =
+        SecurityContextHolder.getContext().authentication.principal as? UserId
+            ?: throw UnauthorizedException()

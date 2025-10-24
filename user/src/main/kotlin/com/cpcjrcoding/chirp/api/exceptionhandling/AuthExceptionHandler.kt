@@ -1,9 +1,11 @@
-package com.cpcjrcoding.chirp.api.exception_handling
+package com.cpcjrcoding.chirp.api.exceptionhandling
 
 import com.cpcjrcoding.chirp.domain.exception.EmailNotVerifiedException
 import com.cpcjrcoding.chirp.domain.exception.InvalidCredentialsException
 import com.cpcjrcoding.chirp.domain.exception.InvalidTokenException
+import com.cpcjrcoding.chirp.domain.exception.RateLimitException
 import com.cpcjrcoding.chirp.domain.exception.SamePasswordException
+import com.cpcjrcoding.chirp.domain.exception.UnauthorizedException
 import com.cpcjrcoding.chirp.domain.exception.UserAlreadyExistsException
 import com.cpcjrcoding.chirp.domain.exception.UserNotFoundException
 import org.springframework.http.HttpStatus
@@ -55,11 +57,27 @@ class AuthExceptionHandler {
             "message" to e.message,
         )
 
+    @ExceptionHandler(UnauthorizedException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun onUnauthorized(e: UnauthorizedException) =
+        mapOf(
+            "code" to "UNAUTHORIZED",
+            "message" to e.message,
+        )
+
     @ExceptionHandler(SamePasswordException::class)
     @ResponseStatus(HttpStatus.CONFLICT)
     fun onSamePassWord(e: SamePasswordException) =
         mapOf(
             "code" to "SAME_PASSWORD",
+            "message" to e.message,
+        )
+
+    @ExceptionHandler(RateLimitException::class)
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    fun onRateLimitExceeded(e: RateLimitException) =
+        mapOf(
+            "code" to "RATE_LIMIT_EXCEEDED",
             "message" to e.message,
         )
 
