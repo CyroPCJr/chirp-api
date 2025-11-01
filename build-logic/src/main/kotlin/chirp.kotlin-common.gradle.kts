@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
     id("io.spring.dependency-management")
+    id("org.springframework.boot")
 }
 
 repositories {
@@ -16,6 +17,11 @@ dependencyManagement {
     imports {
         mavenBom("org.springframework.boot:spring-boot-dependencies:${libraries.findVersion("spring-boot").get()}")
     }
+}
+
+dependencies {
+    "implementation"(libraries.findLibrary("kotlin-reflect").get())
+    "implementation"(libraries.findLibrary("kotlin-stdlib").get())
 }
 
 configure<KotlinJvmProjectExtension> {

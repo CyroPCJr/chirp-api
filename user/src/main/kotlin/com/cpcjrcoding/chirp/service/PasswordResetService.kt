@@ -4,7 +4,7 @@ import com.cpcjrcoding.chirp.domain.exception.InvalidCredentialsException
 import com.cpcjrcoding.chirp.domain.exception.InvalidTokenException
 import com.cpcjrcoding.chirp.domain.exception.SamePasswordException
 import com.cpcjrcoding.chirp.domain.exception.UserNotFoundException
-import com.cpcjrcoding.chirp.domain.model.UserId
+import com.cpcjrcoding.chirp.domain.type.UserId
 import com.cpcjrcoding.chirp.infra.database.entities.PasswordResetTokenEntity
 import com.cpcjrcoding.chirp.infra.database.repositories.PasswordResetTokenRepository
 import com.cpcjrcoding.chirp.infra.database.repositories.RefreshTokenRepository

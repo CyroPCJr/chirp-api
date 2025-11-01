@@ -1,6 +1,6 @@
 package com.cpcjrcoding.chirp.api.dto
 
-import com.cpcjrcoding.chirp.domain.model.UserId
+import com.cpcjrcoding.chirp.domain.type.UserId
 
 data class UserDto(
     val id: UserId,
