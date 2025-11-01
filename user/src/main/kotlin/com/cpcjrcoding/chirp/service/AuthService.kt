@@ -1,5 +1,6 @@
 package com.cpcjrcoding.chirp.service
 
+import com.cpcjrcoding.chirp.domain.events.user.UserEvent
 import com.cpcjrcoding.chirp.domain.exception.EmailNotVerifiedException
 import com.cpcjrcoding.chirp.domain.exception.InvalidCredentialsException
 import com.cpcjrcoding.chirp.domain.exception.InvalidTokenException
@@ -7,12 +8,13 @@ import com.cpcjrcoding.chirp.domain.exception.UserAlreadyExistsException
 import com.cpcjrcoding.chirp.domain.exception.UserNotFoundException
 import com.cpcjrcoding.chirp.domain.model.AuthenticatedUser
 import com.cpcjrcoding.chirp.domain.model.User
-import com.cpcjrcoding.chirp.domain.model.UserId
+import com.cpcjrcoding.chirp.domain.type.UserId
 import com.cpcjrcoding.chirp.infra.database.entities.RefreshTokenEntity
 import com.cpcjrcoding.chirp.infra.database.entities.UserEntity
 import com.cpcjrcoding.chirp.infra.database.mappers.toUser
 import com.cpcjrcoding.chirp.infra.database.repositories.RefreshTokenRepository
 import com.cpcjrcoding.chirp.infra.database.repositories.UserRepository
+import com.cpcjrcoding.chirp.infra.messagequeue.EventPublisher
 import com.cpcjrcoding.chirp.infra.security.PasswordEncoder
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
@@ -28,6 +30,7 @@ class AuthService(
     private val jwtService: JwtService,
     private val refreshTokenRepository: RefreshTokenRepository,
     private val emailVerificationService: EmailVerificationService,
+    private val eventPublisher: EventPublisher,
 ) {
     @Transactional
     fun register(
@@ -56,7 +59,17 @@ class AuthService(
                     ),
                 ).toUser()
 
-        emailVerificationService.createVerificationToken(trimmedEmail)
+        val token = emailVerificationService.createVerificationToken(trimmedEmail)
+
+        eventPublisher.publish(
+            event =
+                UserEvent.Created(
+                    userId = savedUser.id,
+                    email = savedUser.email,
+                    username = savedUser.username,
+                    verificationToken = token.token,
+                ),
+        )
 
         return savedUser
     }

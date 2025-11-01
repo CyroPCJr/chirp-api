@@ -3,7 +3,7 @@ plugins {
     id("chirp.kotlin-common")
 }
 
-group = "org.example"
+group = "com.cpcjrcoding"
 version = "unspecified"
 
 repositories {
@@ -11,6 +11,11 @@ repositories {
 }
 
 dependencies {
+    api(libs.kotlin.reflect)
+    api(libs.jackson.module.kotlin)
+
+    implementation(libs.spring.boot.starter.amqp)
+
     testImplementation(kotlin("test"))
 }
 

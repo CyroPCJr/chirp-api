@@ -1,6 +1,6 @@
 package com.cpcjrcoding.chirp.infra.database.entities
 
-import com.cpcjrcoding.chirp.domain.model.UserId
+import com.cpcjrcoding.chirp.domain.type.UserId
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue

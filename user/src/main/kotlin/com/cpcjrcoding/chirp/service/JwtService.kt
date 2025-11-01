@@ -1,7 +1,7 @@
 package com.cpcjrcoding.chirp.service
 
 import com.cpcjrcoding.chirp.domain.exception.InvalidTokenException
-import com.cpcjrcoding.chirp.domain.model.UserId
+import com.cpcjrcoding.chirp.domain.type.UserId
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
