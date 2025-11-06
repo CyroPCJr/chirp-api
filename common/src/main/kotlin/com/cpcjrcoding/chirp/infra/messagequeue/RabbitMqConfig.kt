@@ -1,6 +1,7 @@
 package com.cpcjrcoding.chirp.infra.messagequeue
 
 import com.cpcjrcoding.chirp.domain.events.ChirpEvent
+import com.cpcjrcoding.chirp.domain.events.chat.ChatEventConstants
 import com.cpcjrcoding.chirp.domain.events.user.UserEventConstants
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
@@ -64,6 +65,21 @@ class RabbitMqConfig {
         )
 
     @Bean
+    fun chatExchange() =
+        TopicExchange(
+            ChatEventConstants.CHAT_EXCHANGE,
+            true,
+            false,
+        )
+
+    @Bean
+    fun chatUserEventsQueue() =
+        Queue(
+            MessageQueues.CHAT_USER_EVENTS,
+            true,
+        )
+
+    @Bean
     fun notificationUserEventsQueue() =
         Queue(
             MessageQueues.NOTIFICATION_USER_EVENTS,
@@ -77,6 +93,16 @@ class RabbitMqConfig {
     ): Binding =
         BindingBuilder
             .bind(notificationUserEventsQueue)
+            .to(userExchange)
+            .with("user.*")
+
+    @Bean
+    fun chatUserEventsBinding(
+        chatUserEventsQueue: Queue,
+        userExchange: TopicExchange,
+    ): Binding =
+        BindingBuilder
+            .bind(chatUserEventsQueue)
             .to(userExchange)
             .with("user.*")
 }
