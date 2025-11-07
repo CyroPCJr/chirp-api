@@ -1,5 +1,9 @@
 package com.cpcjrcoding.chirp.service
 
+import com.cpcjrcoding.chirp.api.dto.ChatMessageDto
+import com.cpcjrcoding.chirp.api.mappers.toChatMessageDto
+import com.cpcjrcoding.chirp.domain.event.ChatParticipantLeftEvent
+import com.cpcjrcoding.chirp.domain.event.ChatParticipantsJoinedEvent
 import com.cpcjrcoding.chirp.domain.exception.ChatNotFoundException
 import com.cpcjrcoding.chirp.domain.exception.ChatParticipantNotFoundException
 import com.cpcjrcoding.chirp.domain.exception.ForbiddenException
@@ -15,15 +19,62 @@ import com.cpcjrcoding.chirp.infra.database.repositories.ChatMessageRepository
 import com.cpcjrcoding.chirp.infra.database.repositories.ChatParticipantRepository
 import com.cpcjrcoding.chirp.infra.database.repositories.ChatRepository
 import jakarta.transaction.Transactional
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import java.time.Instant
 
 @Service
 class ChatService(
     private val chatRepository: ChatRepository,
     private val chatParticipantRepository: ChatParticipantRepository,
     private val chatMessageRepository: ChatMessageRepository,
+    private val applicationEventPublisher: ApplicationEventPublisher,
 ) {
+    @Cacheable(
+        value = ["messages"],
+        key = "#chatId",
+        condition = "#before == null && #pageSize <= 50",
+        sync = true,
+    )
+    fun getChatMessages(
+        chatId: ChatId,
+        before: Instant?,
+        pageSize: Int,
+    ): List<ChatMessageDto> =
+        chatMessageRepository
+            .findByChatIdBefore(
+                chatId = chatId,
+                before = before ?: Instant.now(),
+                pageable = PageRequest.of(0, pageSize),
+            ).content
+            .asReversed()
+            .map { it.toChatMessage().toChatMessageDto() }
+
+    fun getChatById(
+        chatId: ChatId,
+        requestUserId: UserId,
+    ): Chat? =
+        chatRepository
+            .findChatById(chatId, requestUserId)
+            ?.toChat(lastMessageForChat(chatId))
+
+    fun findChatsByUser(userId: UserId): List<Chat> {
+        val chatEntities = chatRepository.findAllByUserId(userId)
+        val chatIds = chatEntities.mapNotNull { it.id }
+        val latestMessages =
+            chatMessageRepository
+                .findLatestMessagesByChatIds(chatIds.toSet())
+                .associateBy { it.chatId }
+
+        return chatEntities
+            .map {
+                it.toChat(lastMessage = latestMessages[it.id]?.toChatMessage())
+            }.sortedByDescending { it.lastActivityAt }
+    }
+
     @Transactional
     fun createChat(
         creatorId: UserId,
@@ -85,6 +136,13 @@ class ChatService(
                     },
                 ).toChat(lastMessage)
 
+        applicationEventPublisher.publishEvent(
+            ChatParticipantsJoinedEvent(
+                chatId = chatId,
+                userIds = userIds,
+            ),
+        )
+
         return updatedChat
     }
 
@@ -110,6 +168,13 @@ class ChatService(
             chat.apply {
                 this.participants = chat.participants - participant
             },
+        )
+
+        applicationEventPublisher.publishEvent(
+            ChatParticipantLeftEvent(
+                chatId = chatId,
+                userId = userId,
+            ),
         )
     }
 

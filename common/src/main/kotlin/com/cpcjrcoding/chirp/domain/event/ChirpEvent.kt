@@ -1,4 +1,4 @@
-package com.cpcjrcoding.chirp.domain.events
+package com.cpcjrcoding.chirp.domain.event
 
 import java.time.Instant
 

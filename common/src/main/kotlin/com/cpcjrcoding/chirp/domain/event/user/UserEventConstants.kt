@@ -1,4 +1,4 @@
-package com.cpcjrcoding.chirp.domain.events.user
+package com.cpcjrcoding.chirp.domain.event.user
 
 object UserEventConstants {
     const val USER_EXCHANGE = "user.events"

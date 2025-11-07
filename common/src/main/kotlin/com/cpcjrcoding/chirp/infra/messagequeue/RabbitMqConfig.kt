@@ -1,8 +1,8 @@
 package com.cpcjrcoding.chirp.infra.messagequeue
 
-import com.cpcjrcoding.chirp.domain.events.ChirpEvent
-import com.cpcjrcoding.chirp.domain.events.chat.ChatEventConstants
-import com.cpcjrcoding.chirp.domain.events.user.UserEventConstants
+import com.cpcjrcoding.chirp.domain.event.ChirpEvent
+import com.cpcjrcoding.chirp.domain.event.chat.ChatEventConstants
+import com.cpcjrcoding.chirp.domain.event.user.UserEventConstants
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
 import com.fasterxml.jackson.module.kotlin.KotlinModule

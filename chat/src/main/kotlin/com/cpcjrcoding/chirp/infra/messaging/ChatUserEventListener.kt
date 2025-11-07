@@ -1,6 +1,6 @@
 package com.cpcjrcoding.chirp.infra.messaging
 
-import com.cpcjrcoding.chirp.domain.events.user.UserEvent
+import com.cpcjrcoding.chirp.domain.event.user.UserEvent
 import com.cpcjrcoding.chirp.domain.models.ChatParticipant
 import com.cpcjrcoding.chirp.infra.messagequeue.MessageQueues
 import com.cpcjrcoding.chirp.service.ChatParticipantService
