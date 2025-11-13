@@ -1,6 +1,6 @@
 package com.cpcjrcoding.chirp.service
 
-import com.cpcjrcoding.chirp.domain.event.ProfilePictureUpdatedEvent
+import com.cpcjrcoding.chirp.domain.events.ProfilePictureUpdatedEvent
 import com.cpcjrcoding.chirp.domain.exception.ChatParticipantNotFoundException
 import com.cpcjrcoding.chirp.domain.exception.InvalidProfilePictureException
 import com.cpcjrcoding.chirp.domain.models.ProfilePictureUploadCredentials

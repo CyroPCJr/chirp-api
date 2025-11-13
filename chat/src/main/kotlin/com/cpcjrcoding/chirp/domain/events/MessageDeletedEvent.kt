@@ -1,4 +1,4 @@
-package com.cpcjrcoding.chirp.domain.event
+package com.cpcjrcoding.chirp.domain.events
 
 import com.cpcjrcoding.chirp.domain.type.ChatId
 import com.cpcjrcoding.chirp.domain.type.ChatMessageId

@@ -10,10 +10,10 @@ import com.cpcjrcoding.chirp.api.dto.ws.OutgoingWebSocketMessageType
 import com.cpcjrcoding.chirp.api.dto.ws.ProfilePictureUpdateDto
 import com.cpcjrcoding.chirp.api.dto.ws.SendMessageDto
 import com.cpcjrcoding.chirp.api.mappers.toChatMessageDto
-import com.cpcjrcoding.chirp.domain.event.ChatParticipantLeftEvent
-import com.cpcjrcoding.chirp.domain.event.ChatParticipantsJoinedEvent
-import com.cpcjrcoding.chirp.domain.event.MessageDeletedEvent
-import com.cpcjrcoding.chirp.domain.event.ProfilePictureUpdatedEvent
+import com.cpcjrcoding.chirp.domain.events.ChatParticipantLeftEvent
+import com.cpcjrcoding.chirp.domain.events.ChatParticipantsJoinedEvent
+import com.cpcjrcoding.chirp.domain.events.MessageDeletedEvent
+import com.cpcjrcoding.chirp.domain.events.ProfilePictureUpdatedEvent
 import com.cpcjrcoding.chirp.domain.type.ChatId
 import com.cpcjrcoding.chirp.domain.type.UserId
 import com.cpcjrcoding.chirp.service.ChatMessageService

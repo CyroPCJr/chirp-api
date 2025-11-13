@@ -2,8 +2,8 @@ package com.cpcjrcoding.chirp.service
 
 import com.cpcjrcoding.chirp.api.dto.ChatMessageDto
 import com.cpcjrcoding.chirp.api.mappers.toChatMessageDto
-import com.cpcjrcoding.chirp.domain.event.ChatParticipantLeftEvent
-import com.cpcjrcoding.chirp.domain.event.ChatParticipantsJoinedEvent
+import com.cpcjrcoding.chirp.domain.events.ChatParticipantLeftEvent
+import com.cpcjrcoding.chirp.domain.events.ChatParticipantsJoinedEvent
 import com.cpcjrcoding.chirp.domain.exception.ChatNotFoundException
 import com.cpcjrcoding.chirp.domain.exception.ChatParticipantNotFoundException
 import com.cpcjrcoding.chirp.domain.exception.ForbiddenException

@@ -1,6 +1,6 @@
-package com.cpcjrcoding.chirp.domain.event.user
+package com.cpcjrcoding.chirp.domain.events.user
 
-import com.cpcjrcoding.chirp.domain.event.ChirpEvent
+import com.cpcjrcoding.chirp.domain.events.ChirpEvent
 import com.cpcjrcoding.chirp.domain.type.UserId
 import java.time.Instant
 import java.util.UUID

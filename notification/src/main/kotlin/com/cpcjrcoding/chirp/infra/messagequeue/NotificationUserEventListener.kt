@@ -1,6 +1,6 @@
 package com.cpcjrcoding.chirp.infra.messagequeue
 
-import com.cpcjrcoding.chirp.domain.event.user.UserEvent
+import com.cpcjrcoding.chirp.domain.events.user.UserEvent
 import com.cpcjrcoding.chirp.service.EmailService
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.stereotype.Component

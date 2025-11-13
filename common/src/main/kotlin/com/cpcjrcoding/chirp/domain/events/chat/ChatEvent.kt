@@ -1,6 +1,6 @@
-package com.cpcjrcoding.chirp.domain.event.chat
+package com.cpcjrcoding.chirp.domain.events.chat
 
-import com.cpcjrcoding.chirp.domain.event.ChirpEvent
+import com.cpcjrcoding.chirp.domain.events.ChirpEvent
 import com.cpcjrcoding.chirp.domain.type.ChatId
 import com.cpcjrcoding.chirp.domain.type.UserId
 import java.time.Instant

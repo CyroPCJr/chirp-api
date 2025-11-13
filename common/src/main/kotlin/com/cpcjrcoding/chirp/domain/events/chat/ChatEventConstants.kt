@@ -1,4 +1,4 @@
-package com.cpcjrcoding.chirp.domain.event.chat
+package com.cpcjrcoding.chirp.domain.events.chat
 
 object ChatEventConstants {
     const val CHAT_EXCHANGE = "chat.events"

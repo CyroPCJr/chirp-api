@@ -1,9 +1,9 @@
-package com.cpcjrcoding.chirp.domain.event
+package com.cpcjrcoding.chirp.domain.events
 
 import com.cpcjrcoding.chirp.domain.type.ChatId
 import com.cpcjrcoding.chirp.domain.type.UserId
 
-data class ChatParticipantLeftEvent(
+data class ChatParticipantsJoinedEvent(
     val chatId: ChatId,
-    val userId: UserId,
+    val userIds: Set<UserId>,
 )

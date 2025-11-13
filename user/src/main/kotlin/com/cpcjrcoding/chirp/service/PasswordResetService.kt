@@ -1,6 +1,6 @@
 package com.cpcjrcoding.chirp.service
 
-import com.cpcjrcoding.chirp.domain.event.user.UserEvent
+import com.cpcjrcoding.chirp.domain.events.user.UserEvent
 import com.cpcjrcoding.chirp.domain.exception.InvalidCredentialsException
 import com.cpcjrcoding.chirp.domain.exception.InvalidTokenException
 import com.cpcjrcoding.chirp.domain.exception.SamePasswordException

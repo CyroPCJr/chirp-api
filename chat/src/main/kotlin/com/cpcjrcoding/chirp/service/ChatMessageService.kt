@@ -1,7 +1,7 @@
 package com.cpcjrcoding.chirp.service
 
-import com.cpcjrcoding.chirp.domain.event.MessageDeletedEvent
-import com.cpcjrcoding.chirp.domain.event.chat.ChatEvent
+import com.cpcjrcoding.chirp.domain.events.MessageDeletedEvent
+import com.cpcjrcoding.chirp.domain.events.chat.ChatEvent
 import com.cpcjrcoding.chirp.domain.exception.ChatNotFoundException
 import com.cpcjrcoding.chirp.domain.exception.ChatParticipantNotFoundException
 import com.cpcjrcoding.chirp.domain.exception.ForbiddenException
