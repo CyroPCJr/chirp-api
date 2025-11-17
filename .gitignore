@@ -28,6 +28,7 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+/app/src/main/resources/firebase-credentials/
 
 ### NetBeans ###
 /nbproject/private/

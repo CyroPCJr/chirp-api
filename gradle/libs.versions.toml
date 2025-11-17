@@ -6,7 +6,7 @@ jackson = "2.17.0"
 jakarta = "6.1.0"
 jwt = "0.12.6"
 okhttp = "4.12.0"
-firebase = "9.5.0"
+firebase = "9.7.0"
 kotlinx-coroutines = "1.9.1"
 
 [libraries]
