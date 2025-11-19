@@ -1,6 +1,7 @@
 package com.cpcjrcoding.chirp.infra.messagequeue
 
 import com.cpcjrcoding.chirp.domain.events.ChirpEvent
+import com.cpcjrcoding.chirp.domain.events.chat.ChatEvent
 import com.cpcjrcoding.chirp.domain.events.chat.ChatEventConstants
 import com.cpcjrcoding.chirp.domain.events.user.UserEventConstants
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -17,6 +18,7 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.annotation.EnableTransactionManagement
+import java.awt.EventQueue
 
 @Configuration
 @EnableTransactionManagement
@@ -85,6 +87,23 @@ class RabbitMqConfig {
             MessageQueues.NOTIFICATION_USER_EVENTS,
             true,
         )
+
+    @Bean
+    fun notificationChatEventsQueue() =
+        Queue(
+            MessageQueues.NOTIFICATION_CHAT_EVENTS,
+            true,
+        )
+
+    @Bean
+    fun notificationChatEventsBinding(
+        notificationChatEventsQueue: Queue,
+        chatExchange: TopicExchange,
+    ): Binding =
+        BindingBuilder
+            .bind(notificationChatEventsQueue)
+            .to(chatExchange)
+            .with(ChatEventConstants.CHAT_NEW_MESSAGE)
 
     @Bean
     fun notificationUserEventsBinding(
