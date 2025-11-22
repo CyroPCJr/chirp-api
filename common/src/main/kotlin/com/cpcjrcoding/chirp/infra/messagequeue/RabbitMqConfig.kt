@@ -1,58 +1,54 @@
 package com.cpcjrcoding.chirp.infra.messagequeue
 
 import com.cpcjrcoding.chirp.domain.events.ChirpEvent
-import com.cpcjrcoding.chirp.domain.events.chat.ChatEvent
 import com.cpcjrcoding.chirp.domain.events.chat.ChatEventConstants
 import com.cpcjrcoding.chirp.domain.events.user.UserEventConstants
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.springframework.amqp.core.Binding
 import org.springframework.amqp.core.BindingBuilder
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.core.TopicExchange
 import org.springframework.amqp.rabbit.connection.ConnectionFactory
 import org.springframework.amqp.rabbit.core.RabbitTemplate
-import org.springframework.amqp.support.converter.Jackson2JavaTypeMapper
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
+import org.springframework.amqp.support.converter.JacksonJavaTypeMapper
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.annotation.EnableTransactionManagement
-import java.awt.EventQueue
+import tools.jackson.databind.DefaultTyping
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator
+import tools.jackson.module.kotlin.kotlinModule
 
 @Configuration
 @EnableTransactionManagement
 class RabbitMqConfig {
     @Bean
-    fun messageConverter(): Jackson2JsonMessageConverter {
+    fun messageConverter(): JacksonJsonMessageConverter {
+        val polymorphicTypeValidator =
+            BasicPolymorphicTypeValidator
+                .builder()
+                .allowIfBaseType(ChirpEvent::class.java)
+                .allowIfSubType("java.util.") // Allow Java lists
+                .allowIfSubType("kotlin.collections.") // Kotlin collections
+                .build()
+
         val objectMapper =
-            ObjectMapper().apply {
-                registerModule(KotlinModule.Builder().build())
-                findAndRegisterModules()
+            JsonMapper
+                .builder()
+                .addModule(kotlinModule())
+                .polymorphicTypeValidator(polymorphicTypeValidator)
+                .activateDefaultTyping(polymorphicTypeValidator, DefaultTyping.NON_FINAL)
+                .build()
 
-                val polymorphicTypeValidator =
-                    BasicPolymorphicTypeValidator
-                        .builder()
-                        .allowIfBaseType(ChirpEvent::class.java)
-                        .allowIfSubType("java.util.") // Allow Java lists
-                        .allowIfSubType("kotlin.collections.") // Kotlin collections
-                        .build()
-
-                activateDefaultTyping(
-                    polymorphicTypeValidator,
-                    ObjectMapper.DefaultTyping.NON_FINAL,
-                )
-            }
-
-        return Jackson2JsonMessageConverter(objectMapper).apply {
-            typePrecedence = Jackson2JavaTypeMapper.TypePrecedence.TYPE_ID
+        return JacksonJsonMessageConverter(objectMapper).apply {
+            typePrecedence = JacksonJavaTypeMapper.TypePrecedence.TYPE_ID
         }
     }
 
     @Bean
     fun rabbitTemplate(
         connectionFactory: ConnectionFactory,
-        messageConverter: Jackson2JsonMessageConverter,
+        messageConverter: JacksonJsonMessageConverter,
     ): RabbitTemplate =
         RabbitTemplate(connectionFactory).apply {
             this.messageConverter = messageConverter

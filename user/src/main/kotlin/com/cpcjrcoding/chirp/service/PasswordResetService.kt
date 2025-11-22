@@ -81,7 +81,7 @@ class PasswordResetService(
         val hashedNewPassword = passwordEncoder.encode(newPassword)
         userRepository.save(
             user.apply {
-                this.hashedPassword = hashedNewPassword
+                this.hashedPassword = hashedNewPassword!!
             },
         )
 
@@ -117,11 +117,14 @@ class PasswordResetService(
         val newHashedPassword = passwordEncoder.encode(newPassword)
         userRepository.save(
             user.apply {
-                this.hashedPassword = newHashedPassword
+                this.hashedPassword = newHashedPassword!!
             },
         )
     }
 
+    /**
+     * This job is scheduled to run at 3 AM every day to clean up expired password reset tokens.
+     */
     @Scheduled(cron = "0 0 3 * * *")
     fun cleanupExpiredTokens() {
         passwordResetTokenRepository.deleteByExpiresAtLessThan(
