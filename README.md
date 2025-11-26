@@ -1,167 +1,84 @@
-#### Chirp API
+# Chirp API
 
-A clean, customizable README template for the "chirp-api" project. Replace placeholders with project-specific details.
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/CyroPCJr/chirp-api/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Kotlin Version](https://img.shields.io/badge/Kotlin-2.2.21-blue.svg)](https://kotlinlang.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
 
----
-
-# chirp-api
-
-Chirp API is a lightweight RESTful API for creating, reading, updating, and deleting short messages ("chirps"). This README is a template — fill in the details that match your project's stack, configuration, and deployment.
+**Chirp API** is a chat application backend project developed using **Spring Boot** and **Kotlin**. The project is structured with a multi-module, event-driven architecture, showcasing a modern and scalable approach to API development.
 
 ## Features
 
-- CRUD endpoints for chirps
-- Pagination and basic filtering
-- Authentication (JWT) optional
-- Tests and linting (configure to taste)
+- **Multi-module Architecture**: The project is divided into `app`, `chat`, `user`, `notification`, and `common` modules, promoting separation of concerns and maintainability.
+- **Event-Driven**: Utilizes **RabbitMQ** for asynchronous communication between modules, allowing for loose coupling and increased scalability.
+- **Push Notifications**: Integration with **Firebase Admin SDK** for sending push notifications to clients.
+- **Security**: Implementation of authentication and authorization for API endpoints.
+- **Email Sending**: Dedicated module for sending transactional emails.
+- **Caching**: Configuration for caching to optimize performance.
+- **Traffic Control**: Uses **Redis** for traffic control and rate limiting.
 
 ## Technologies
 
-- [Add your runtime/framework here — e.g. Node.js + Express, Python + Flask, Go, etc.]
-- Database: [e.g. PostgreSQL, MongoDB, SQLite]
+| Category | Technology |
+| :--- | :--- |
+| **Framework** | Spring Boot 4.0.0 |
+| **Language** | Kotlin 2.2.21 |
+| **Build Tool** | Gradle (Kotlin DSL) |
+| **Messaging** | RabbitMQ |
+| **Notifications** | Firebase Admin SDK |
+| **Database** | (Not specified, configurable via `application.yml`) |
+| **Cache/Traffic** | Redis |
+
+## Architecture
+
+The project is organized into a multi-module architecture, where each module has a specific responsibility:
+
+- **`app`**: The main module that integrates all other modules and contains the application's startup class.
+- **`chat`**: Module responsible for chat functionalities, such as sending and receiving messages.
+- **`user`**: Module for user management, authentication, and profiles.
+- **`notification`**: Module for sending push notifications and emails.
+- **`common`**: Module containing shared code and utilities used across other modules.
+- **`build-logic`**: Custom build logic for Gradle.
 
 ## Prerequisites
 
-- [Runtime] installed (e.g. Node.js >= 18, Python 3.10+)
-- Database server (if required)
-- A package manager (npm, yarn, pip, etc.)
+- Java 21 or higher
+- Gradle 8.x
+- RabbitMQ (for the development environment)
+- Redis (for the development environment)
+- Firebase service account (for push notifications)
 
-## Installation
+## Getting Started
 
-1. Clone the repo
-
+1. **Clone the repository:**
+   ```bash
    git clone https://github.com/CyroPCJr/chirp-api.git
    cd chirp-api
+   ```
 
-2. Install dependencies
+2. **Configure the environment:**
+   - Rename the `application.yml.example` file (if it exists) to `application.yml` in the `app/src/main/resources` module.
+   - Fill in the database, RabbitMQ, and Firebase configurations in the `application.yml` file.
 
-   # For Node.js
-   npm install
-   # or
-   yarn install
-
-   # For Python
-   pip install -r requirements.txt
-
-## Configuration
-
-Create a .env file in the project root with environment-specific variables. Example for Node.js/Express:
-
-```
-PORT=3000
-DATABASE_URL=postgres://user:password@localhost:5432/chirpdb
-JWT_SECRET=replace_with_a_strong_secret
-NODE_ENV=development
-```
-
-Replace values with those appropriate for your setup.
-
-## Running the app
-
-Development mode
-
-- Node.js (example):
-
-  npm run dev
-
-- Python (example):
-
-  flask run --reload
-
-Production
-
-- Build and start according to your stack (e.g. pm2, Docker, systemd).
-
-## API Endpoints
-
-Below are suggested endpoints and example request/response shapes. Adjust to match your implementation.
-
-- GET /chirps
-  - Description: List all chirps (paginated)
-  - Query parameters: page, limit
-  - Response: 200 OK
-
-  Example response:
-  ```json
-  {
-    "data": [
-      {"id": "1", "user": "alice", "text": "Hello world!", "createdAt": "2025-01-01T12:00:00Z"}
-    ],
-    "meta": {"page": 1, "limit": 10, "total": 42}
-  }
-  ```
-
-- POST /chirps
-  - Description: Create a new chirp
-  - Body: { "text": "Your chirp text" }
-  - Response: 201 Created
-
-  Example request:
-  ```json
-  { "text": "This is my chirp" }
-  ```
-
-- GET /chirps/:id
-  - Description: Get a single chirp by id
-  - Response: 200 OK
-
-- PUT /chirps/:id
-  - Description: Update a chirp
-  - Body: { "text": "Updated text" }
-  - Response: 200 OK
-
-- DELETE /chirps/:id
-  - Description: Delete a chirp
-  - Response: 204 No Content
-
-## Authentication
-
-If your API requires authentication, consider using JWTs or OAuth. Example header for bearer token:
-
-```
-Authorization: Bearer <token>
-```
-
-## Testing
-
-Run tests with your chosen test runner. Examples:
-
-- Node.js: npm test
-- Python: pytest
-
-## Linting & Formatting
-
-- Run linters/formatters configured for the project (eslint, prettier, black, flake8, etc.)
-
-## Docker
-
-Provide a Dockerfile and docker-compose.yml if you want to containerize the app. Example commands:
-
-```
-docker build -t chirp-api .
-docker run -p 3000:3000 --env-file .env chirp-api
-```
+3. **Run the application:**
+   ```bash
+   ./gradlew bootRun
+   ```
 
 ## Contributing
 
-Contributions are welcome! Please:
+Contributions are welcome! Feel free to open an issue or submit a pull request.
 
 1. Fork the repository
-2. Create a feature branch: git checkout -b feat/my-feature
-3. Commit your changes and push: git push origin feat/my-feature
-4. Open a pull request describing your change
-
-Include tests and update documentation where applicable.
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -m 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Open a Pull Request
 
 ## License
 
-[Choose a license, e.g. MIT] - add a LICENSE file to the repository.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Contact
 
-Maintainer: CyroPCJr
-
----
-
-Notes:
-- This README is a starting point. Edit the sections above to precisely match your project's implementation details, scripts, and deployment instructions.
+Cyro P. C. Jr. - [https://github.com/CyroPCJr](https://github.com/CyroPCJr)
