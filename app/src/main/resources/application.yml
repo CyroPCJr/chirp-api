@@ -47,6 +47,9 @@ spring:
           auth: true
           starttls:
             enable: true
+        host: smtp.mailgun.org
+        username: cpcjrcoding@sandboxcc11d260344c498887622fe7f4130076.mailgun.org
+
 
   rabbitmq:
     host: jaragua.lmq.cloudamqp.com
@@ -68,16 +71,24 @@ spring:
           max-interval: 10000ms
           max-attempts: 3
           multiplier: 2
+
 jwt:
   secret: ${JWT_SECRET_BASE64}
+  expiration-minutes: 15
 
 chirp:
   email:
     from: cpcjrcoding@yopmail.com
+    url: "http://localhost:8080"
     verification:
       expiry-hours: 24
     reset-password:
       expiry-minutes: 30
+  rate-limit:
+    ip:
+      apply-limit: true
+  web-socket:
+    allowed-origin: "http://localhost:8080"
 
 nginx:
   trusted-ips:
