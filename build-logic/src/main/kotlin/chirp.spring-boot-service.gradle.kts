@@ -10,7 +10,6 @@ dependencies {
     "implementation"(libraries.findLibrary("kotlin-stdlib").get())
     "implementation"(libraries.findLibrary("spring-boot-starter-web").get())
     "implementation"(libraries.findLibrary("spring-boot-starter-data-jpa").get())
-    "implementation"(libraries.findLibrary("env-config-file").get())
     "runtimeOnly"(libraries.findLibrary("postgresql").get())
 
     "testImplementation"(libraries.findLibrary("spring-boot-starter-test").get())

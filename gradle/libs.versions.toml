@@ -8,7 +8,7 @@ jwt = "0.13.0"
 okhttp = "5.32.0"
 firebase = "9.7.0"
 kotlinx-coroutines = "1.9.1"
-env = "4.0.0"
+#env = "4.0.0"
 
 [libraries]
 # Spring Boot Starters
@@ -52,7 +52,7 @@ okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.
 firebase-admin-sdk = { module = "com.google.firebase:firebase-admin", version.ref = "firebase" }
 
 # env file
-env-config-file = { module = "me.paulschwarz:spring-dotenv", version.ref = "env" }
+#env-config-file = { module = "me.paulschwarz:spring-dotenv", version.ref = "env" }
 
 # Test
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
