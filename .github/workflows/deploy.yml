@@ -1,0 +1,62 @@
+name: Deploy Chirp Backend
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          ssh-keyscan -H 144.33.24.203 >> ~/.ssh/known_hosts
+
+      - name: Create Firebase credentials
+        run: |
+          mkdir -p app/src/main/resources/firebase-credentials
+          echo "${{ secrets.FIREBASE_CREDENTIALS_BASE64 }}" | base64 -d > app/src/main/resources/firebase-credentials/chirp-firebase-adminsdk.json
+
+      - name: Build JAR
+        run: |
+          ./gradlew :app:bootJar -Pprod --no-daemon
+
+      - name: Deploy to OCI Server
+        env:
+          REMOTE_SERVER: ubuntu@144.33.24.203
+          REMOTE_DIR: /home/ubuntu/chirp
+        run: |
+          JAR_NAME=$(ls app/build/libs/*.jar | head -1 | xargs basename)
+          LOCAL_JAR="app/build/libs/$JAR_NAME"
+
+          echo "Deploying $JAR_NAME..."
+
+          rsync -avz --progress -e ssh "$LOCAL_JAR" $REMOTE_SERVER:$REMOTE_DIR/chirp.jar.new
+
+          ssh $REMOTE_SERVER << EOF
+            set -e
+            mv $REMOTE_DIR/chirp.jar.new $REMOTE_DIR/chirp.jar
+            chmod 755 $REMOTE_DIR/chirp.jar
+            sudo systemctl restart chirp.service
+            echo "Deploy done, success!"
+          EOF
