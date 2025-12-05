@@ -49,6 +49,9 @@ spring:
           auth: true
           starttls:
             enable: true
+        host: smtp.mailgun.org
+        username: cpcjrcoding@sandboxcc11d260344c498887622fe7f4130076.mailgun.org
+
 
   rabbitmq:
     host: jaragua.lmq.cloudamqp.com
