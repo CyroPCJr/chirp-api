@@ -13,7 +13,7 @@ HELP.md
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
 .sts4-cache
 bin/
@@ -28,15 +28,23 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+
+### Firebase / Secrets ###
 /app/src/main/resources/firebase-credentials/
+firebase-credentials/
+*.json
+
+### Environment / Secrets ###
 .env
+.env.local
+.env.*.local
 
 ### NetBeans ###
 /nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
 
 ### VS Code ###
 .vscode/
@@ -53,7 +61,7 @@ out/
 *.seed
 *.pid.lock
 
-### Application specific ###
+### Build Artifacts ###
 *.jar
 *.war
 *.nar
@@ -71,10 +79,7 @@ out/
 ehthumbs.db
 Thumbs.db
 
-### Environment ###
-.env
-.env.local
-.env.*.local
+### Application Config ###
 application-*.yml
 application-*.yaml
 application-*.properties
