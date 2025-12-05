@@ -11,8 +11,8 @@ spring:
       timeout: 2000ms
 
   datasource:
-    url: jdbc:postgresql://aws-1-sa-east-1.pooler.supabase.com:5432/postgres?sslmode=require
-    username: postgres
+    url: jdbc:postgresql://aws-1-sa-east-1.pooler.supabase.com:5432/postgres?sslmode=require&pgbouncer=true
+    username: postgres.vuhzfpiuxvifdeitqmht
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
@@ -39,7 +39,9 @@ spring:
         format_sql: true
         show_sql: true
   mail:
+    host: smtp.mailgun.org
     port: 587
+    username: ${MAILGUN_USERNAME}
     password: ${MAILGUN_PASSWORD}
     properties:
       mail:
