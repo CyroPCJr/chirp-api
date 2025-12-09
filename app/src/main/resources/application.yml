@@ -81,7 +81,7 @@ jwt:
 chirp:
   email:
     from: cpcjrcoding@yopmail.com
-    url: "https://chirpapp-six.vercel.app/"
+    url: "http://chirpappws.chirpappws.abrdns.com/"
     verification:
       expiry-hours: 24
     reset-password:
@@ -90,9 +90,10 @@ chirp:
     ip:
       apply-limit: true
   web-socket:
-    allowed-origin: "https://chirpapp-six.vercel.app/"
+    allowed-origin: "*"
 
 nginx:
+  require-proxy: false
   trusted-ips:
     - "127.0.0.1" # nginx on same machine
     - "::1" # IPv6 localhost
