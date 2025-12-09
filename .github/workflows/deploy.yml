@@ -45,6 +45,9 @@ jobs:
         run: |
           ./gradlew :app:bootJar -Pprod --no-daemon
 
+      - name: List generated JARs
+        run: ls -lh app/build/libs/
+
       - name: Deploy to OCI Server
         env:
           REMOTE_SERVER: ubuntu@144.33.24.203
