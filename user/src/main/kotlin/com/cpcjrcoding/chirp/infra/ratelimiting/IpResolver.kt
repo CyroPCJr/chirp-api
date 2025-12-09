@@ -50,28 +50,47 @@ class IpResolver(
             }
 
     fun getClientIp(request: HttpServletRequest): String {
-        val remoteAddr = request.remoteAddr
+        val proxyIp = request.remoteAddr
 
-        if (!isFromTrustedProxy(remoteAddr)) {
+        if (!isFromTrustedProxy(proxyIp)) {
             if (nginxConfig.requireProxy) {
-                logger.warn("Direct connection attempt from $remoteAddr")
-                throw SecurityException("No valid client IP in proxy headers")
+                logger.warn("Direct connection attempt from $proxyIp")
+                throw SecurityException("Direct access not allowed")
             }
-
-            return remoteAddr
+            return proxyIp
         }
 
-        val clientIp = extractFromXRealIp(request, remoteAddr)
+        extractFromXForwardedFor(request, proxyIp)?.let { return it }
+        extractFromHeader(request, proxyIp = proxyIp)?.let { return it }
 
-        if (clientIp == null) {
-            logger.warn("No valid client IP in proxy headers")
-            if (nginxConfig.requireProxy) {
-                throw SecurityException("No valid client IP in proxy headers")
-            }
+        logger.warn("Trusted proxy $proxyIp did not send valid client IP headers")
+
+        if (nginxConfig.requireProxy) {
+            throw SecurityException("No valid client IP in proxy headers")
         }
 
-        return clientIp ?: remoteAddr
+        return proxyIp
     }
+
+    private fun extractFromXForwardedFor(
+        request: HttpServletRequest,
+        proxyIp: String,
+    ): String? =
+        request
+            .getHeader("X-Forwarded-For")
+            ?.split(",")
+            ?.map { it.trim() }
+            ?.firstOrNull()
+            ?.let { validateAndNormalizeIp(it, "X-Forwarded-For", proxyIp) }
+
+    private fun extractFromHeader(
+        request: HttpServletRequest,
+        header: String = "X-Real-IP",
+        proxyIp: String,
+    ): String? =
+        request
+            .getHeader(header)
+            ?.let { validateAndNormalizeIp(it, header, proxyIp) }
 
     private fun extractFromXRealIp(
         request: HttpServletRequest,
@@ -96,9 +115,14 @@ class IpResolver(
         return try {
             val inetAddr =
                 when {
-                    trimmedIp.contains(":") -> Inet6Address.getByName(trimmedIp)
-                    trimmedIp.matches(Regex("\\d+\\.\\d+\\.\\d+\\.\\d+")) ->
+                    trimmedIp.contains(":") -> { // IPv6
+                        Inet6Address.getByName(trimmedIp)
+                    }
+
+                    trimmedIp.matches(Regex("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$")) -> { // IPv4
                         Inet4Address.getByName(trimmedIp)
+                    }
+
                     else -> {
                         logger.warn("Invalid IP format in $headerName: $trimmedIp from proxy $proxyIp")
                         return null
