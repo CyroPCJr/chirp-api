@@ -60,11 +60,10 @@ jobs:
 
           rsync -avz --progress -e ssh "$LOCAL_JAR" $REMOTE_SERVER:$REMOTE_DIR/chirp.jar.new
 
-          ssh $REMOTE_SERVER << EOF
-            set -e
-            mv $REMOTE_DIR/chirp.jar.new $REMOTE_DIR/chirp.jar
-            chmod 755 $REMOTE_DIR/chirp.jar
-            sudo systemctl restart chirp.service
-            echo "Deploy done, success!"
+          ssh $REMOTE_SERVER <<EOF
+          set -e
+          mv $REMOTE_DIR/chirp.jar.new $REMOTE_DIR/chirp.jar
+          chmod 755 $REMOTE_DIR/chirp.jar
+          sudo systemctl restart chirp.service
+          echo "Deploy done, success!"
           EOF
-          
