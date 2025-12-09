@@ -53,7 +53,7 @@ jobs:
           REMOTE_SERVER: ubuntu@144.33.24.203
           REMOTE_DIR: /home/ubuntu/chirp
         run: |
-          JAR_NAME=$(ls app/build/libs/*boot*.jar | head -1 | xargs basename)
+          JAR_NAME=$(ls app/build/libs/*.jar | head -1 | xargs basename)
           LOCAL_JAR="app/build/libs/$JAR_NAME"
 
           echo "Deploying $JAR_NAME..."
@@ -66,5 +66,4 @@ jobs:
             chmod 755 $REMOTE_DIR/chirp.jar
             sudo systemctl restart chirp.service
             echo "Deploy done, success!"
-          EOF
-          
+          EOF         
