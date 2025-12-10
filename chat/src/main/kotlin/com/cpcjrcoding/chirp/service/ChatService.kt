@@ -2,6 +2,7 @@ package com.cpcjrcoding.chirp.service
 
 import com.cpcjrcoding.chirp.api.dto.ChatMessageDto
 import com.cpcjrcoding.chirp.api.mappers.toChatMessageDto
+import com.cpcjrcoding.chirp.domain.events.ChatCreatedEvent
 import com.cpcjrcoding.chirp.domain.events.ChatParticipantLeftEvent
 import com.cpcjrcoding.chirp.domain.events.ChatParticipantsJoinedEvent
 import com.cpcjrcoding.chirp.domain.exception.ChatNotFoundException
@@ -95,12 +96,20 @@ class ChatService(
                 ?: throw ChatParticipantNotFoundException(creatorId)
 
         return chatRepository
-            .save(
+            .saveAndFlush(
                 ChatEntity(
                     creator = creator,
                     participants = setOf(creator) + otherParticipants,
                 ),
             ).toChat(lastMessage = null)
+            .also { entity ->
+                applicationEventPublisher.publishEvent(
+                    ChatCreatedEvent(
+                        chatId = entity.id,
+                        participantIds = entity.participants.map { it.userId },
+                    ),
+                )
+            }
     }
 
     @Transactional
